@@ -381,7 +381,7 @@ export default function Dashboard() {
                                 Unavoidable
                               </span>
                               <p className="text-xs" data-description>
-                                (=1) Your game is in everyone's mouth and has a
+                                (=1) Your game is in everyones mouth and has a
                                 lot of reviews.
                               </p>
                             </div>
@@ -401,7 +401,7 @@ export default function Dashboard() {
                       </Label>
                       <p className="text-sm text-muted-foreground">
                         If the game is rated for a specific age group (not
-                        necessarily "mature").
+                        necessarily mature).
                       </p>
                     </div>
                   </div>
@@ -654,7 +654,7 @@ export default function Dashboard() {
                               Unavoidable
                             </span>
                             <p className="text-xs" data-description>
-                              (=1) Your game is in everyone's mouth and has a
+                              (=1) Your game is in everyone mouth and has a
                               lot of reviews.
                             </p>
                           </div>
@@ -678,7 +678,7 @@ export default function Dashboard() {
                     </Label>
                     <p className="text-sm text-muted-foreground">
                       If the game is rated for a specific age group (not
-                      necessarily "mature").
+                      necessarily mature).
                     </p>
                   </div>
                 </div>

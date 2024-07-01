@@ -187,7 +187,38 @@ const products = [
         imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg',
         imageAlt: 'Hand holding black machined steel mechanical pencil with brass tip and top.',
     },
-    // More products...
+    {
+        id: 5,
+        name: 'T-Shirt Coton',
+        href: '#',
+        price: '$110',
+        imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-02-featured-product-shot.jpg',
+        imageAlt: 'Coton Tshirt.',
+    },
+    {
+        id: 6,
+        name: 'Rose Petals Divine',
+        href: '#',
+        price: '$120',
+        imageSrc: 'https://pagedone.io/asset/uploads/1701162850.png',
+        imageAlt: 'Perfume Pinky.',
+    },
+    {
+        id: 7,
+        name: 'Musk Rose Cooper',
+        href: '#',
+        price: '$120',
+        imageSrc: 'https://pagedone.io/asset/uploads/1701162866.png',
+        imageAlt: 'Person using a pen to cross a task off a productivity paper card.',
+    },
+    {
+        id: 8,
+        name: 'Dusk Dark Hue',
+        href: '#',
+        price: '$120',
+        imageSrc: 'https://pagedone.io/asset/uploads/1701162880.png',
+        imageAlt: 'Hand holding black machined steel mechanical pencil with brass tip and top.',
+    },
 ]
 
 
@@ -323,9 +354,9 @@ export default function Example() {
                                                                                     {section.items.map((item) => (
                                                                                         <li key={item.name} className="flex">
                                                                                             <Link href="./fake-page">
-                                                                                            <div className="hover:text-gray-800">
-                                                                                                {item.name}
-                                                                                            </div></Link>
+                                                                                                <div className="hover:text-gray-800">
+                                                                                                    {item.name}
+                                                                                                </div></Link>
                                                                                         </li>
                                                                                     ))}
                                                                                 </ul>
@@ -365,10 +396,13 @@ export default function Example() {
                                 {/* Cart */}
                                 <div className="ml-4 flow-root lg:ml-6">
                                     <a href="#" className="group -m-2 flex items-center p-2">
-                                        <ShoppingBagIcon
-                                            className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                                            aria-hidden="true"
-                                        />
+                                        <button className="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-gray-900 hover:bg-blue-500/10 active:bg-blue-700/30 flex items-center gap-4 px-4 capitalize" type="button">
+                                            <Link href="./shopping_cart">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                                </svg>
+                                            </Link>
+                                        </button>
                                         <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
                                         <span className="sr-only">items in cart, view bag</span>
                                     </a>
@@ -593,7 +627,7 @@ export default function Example() {
                                                         <img
                                                             src={product.imageSrc}
                                                             alt={product.imageAlt}
-                                                            className="h-full w-full object-cover object-center group-hover:opacity-75"
+                                                            className="h-[186px] w-full object-cover object-center group-hover:opacity-75"
                                                         />
                                                     </Link>
                                                 </div>
