@@ -1,7 +1,7 @@
-
 "use client"
 
-import { useState } from 'react'
+import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
 import {
     Dialog,
     DialogBackdrop,
@@ -23,12 +23,12 @@ import {
     TabPanel,
     TabPanels,
 } from '@headlessui/react'
-import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
-import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { use, useEffect, useState } from 'react';
+
+import Image from "next/image";
 import Link from 'next/link';
 import logo from '../logo.png'
-import Image from "next/image";
-
+import { useRouter } from 'next/navigation';
 
 const navigation = {
     categories: [
@@ -282,6 +282,20 @@ export default function Example() {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const [open, setOpen] = useState(false)
 
+    const router = useRouter();
+
+    const openProduct = (idProduct: string | number) => {
+        router.push('/product?productId=' + idProduct);
+        
+    }
+
+    // useEffect(() => {
+    //     if (typeof window !== 'undefined') {
+    //         localStorage.removeItem('cart');
+    //     }
+    // }, [])
+    
+
     return (
         <div className="bg-white">
             <header className="relative bg-white">
@@ -398,8 +412,8 @@ export default function Example() {
                                     <a href="#" className="group -m-2 flex items-center p-2">
                                         <button className="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-gray-900 hover:bg-blue-500/10 active:bg-blue-700/30 flex items-center gap-4 px-4 capitalize" type="button">
                                             <Link href="./shopping_cart">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                                                 </svg>
                                             </Link>
                                         </button>
@@ -621,15 +635,13 @@ export default function Example() {
 
                                     <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                                         {products.map((product) => (
-                                            <a key={product.id} href={product.href} className="group">
+                                            <a onClick={(e) => openProduct(product.id)} key={product.id} href={product.href} className="group">
                                                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                                                    <Link href="./product">
                                                         <img
                                                             src={product.imageSrc}
                                                             alt={product.imageAlt}
                                                             className="h-[186px] w-full object-cover object-center group-hover:opacity-75"
                                                         />
-                                                    </Link>
                                                 </div>
                                                 <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
                                                 <p className="mt-1 text-lg font-medium text-gray-900">{product.price}</p>
