@@ -1,2 +1,4 @@
 fastapi
 kafka-python-ng
+pyspark
+aiokafka
