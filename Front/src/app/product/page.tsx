@@ -348,6 +348,7 @@ export default function Example() {
     const [selectedSize, setSelectedSize] = useState(product.sizes[0])
     const [selectedId, setselectedId] = useState('')
     const [selectedProduct, setSelectedProduct] = useState<Product>(products[0]);
+    const [success, setSuccess] = useState('');
 
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -366,7 +367,8 @@ export default function Example() {
         console.log(selectedProduct.breadcrumbs);
     }, [selectedProduct]); 
     
-    const addToCart = () => {
+    const addToCart = (event) => {
+        event.preventDefault(); 
         console.log(localStorage.getItem('cart'));
         var quantity = 1;
         if (typeof window !== 'undefined') {
@@ -382,13 +384,14 @@ export default function Example() {
                 const total = '$' + intTotal.toString();
                 cart.push({productId: selectedProduct.id, quantity, price: selectedProduct.price, total, name: selectedProduct.name, image: selectedProduct.images[0].src});
             }
+            setSuccess('Product added to cart');
             
             localStorage.setItem('cart', JSON.stringify(cart));
         }
 
         console.log(localStorage.getItem('cart'));
 
-        router.push('/shopping_cart');
+        // router.push('/shopping_cart');
     };
 
     
@@ -593,10 +596,10 @@ export default function Example() {
                                     </RadioGroup>
                                 </fieldset>
                             </div>
-
+                            {success && <p className="text-green-500 mt-4">{success}</p>}
                             <button
-                                onClick={() => addToCart()}
-                                type="submit"
+                                onClick={(e) => addToCart(e)}
+                                // type="submit"
                                 className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             >
                                 Add to bag
