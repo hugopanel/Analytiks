@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 
 import Link from 'next/link';
+import { Router } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface CartItem {
     productId: string;
@@ -27,6 +29,8 @@ export default function Shopping() {
     const [stringTotal, setStringTotal] = useState('');
     const [stringTotalWithDelivery, setStringTotalWithDelivery] = useState('');
     const [products, setProducts] = useState<CartItem[]>([]);
+
+    const router = useRouter();
 
     const convertCartItems = (items: any[]): CartItem[] => {
         return items.map(item => ({
@@ -121,6 +125,15 @@ export default function Shopping() {
             window.location.reload();
         }
     };
+
+    const checkout = (event) => {
+        event.preventDefault();
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('cart');
+        }
+        router.push('/catalogue');
+    }
+        
     
     return (
         <section
@@ -326,6 +339,7 @@ export default function Shopping() {
                                     <p className="font-semibold text-xl leading-8 text-indigo-600">{stringTotalWithDelivery}</p>
                                 </div>
                                 <button
+                                    onClick={checkout}
                                     className="w-full text-center bg-indigo-600 rounded-xl py-3 px-6 font-semibold text-lg text-white transition-all duration-500 hover:bg-indigo-700">Checkout</button>
                             </form>
                         </div>
