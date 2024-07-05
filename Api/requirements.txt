@@ -1,4 +1,5 @@
 fastapi
+uvicorn
 kafka-python-ng
-pyspark
 aiokafka
+pyspark
