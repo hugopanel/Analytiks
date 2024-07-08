@@ -27,12 +27,14 @@ const navigation = {
             name: 'Women',
             featured: [
                 {
+                    id: 'women-featured-1',
                     name: 'New Arrivals',
                     href: '#',
                     imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg',
                     imageAlt: 'Models sitting back to back, wearing Basic Tee in black and bone.',
                 },
                 {
+                    id: 'women-featured-2',
                     name: 'Basic Tees',
                     href: '#',
                     imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg',
@@ -41,41 +43,41 @@ const navigation = {
             ],
             sections: [
                 {
-                    id: 'clothing',
+                    id: 'women-clothing',
                     name: 'Clothing',
                     items: [
-                        { name: 'Tops', href: '#' },
-                        { name: 'Dresses', href: '#' },
-                        { name: 'Pants', href: '#' },
-                        { name: 'Denim', href: '#' },
-                        { name: 'Sweaters', href: '#' },
-                        { name: 'T-Shirts', href: '#' },
-                        { name: 'Jackets', href: '#' },
-                        { name: 'Activewear', href: '#' },
-                        { name: 'Browse All', href: '#' },
+                        { id: 'women-tops', name: 'Tops', href: '#' },
+                        { id: 'women-dresses', name: 'Dresses', href: '#' },
+                        { id: 'women-pants', name: 'Pants', href: '#' },
+                        { id: 'women-denim', name: 'Denim', href: '#' },
+                        { id: 'women-sweaters', name: 'Sweaters', href: '#' },
+                        { id: 'women-t-shirts', name: 'T-Shirts', href: '#' },
+                        { id: 'women-jackets', name: 'Jackets', href: '#' },
+                        { id: 'women-activewear', name: 'Activewear', href: '#' },
+                        { id: 'women-browse-all', name: 'Browse All', href: '#' },
                     ],
                 },
                 {
-                    id: 'accessories',
+                    id: 'women-accessories',
                     name: 'Accessories',
                     items: [
-                        { name: 'Watches', href: '#' },
-                        { name: 'Wallets', href: '#' },
-                        { name: 'Bags', href: '#' },
-                        { name: 'Sunglasses', href: '#' },
-                        { name: 'Hats', href: '#' },
-                        { name: 'Belts', href: '#' },
+                        { id: 'women-watches', name: 'Watches', href: '#' },
+                        { id: 'women-wallets', name: 'Wallets', href: '#' },
+                        { id: 'women-bags', name: 'Bags', href: '#' },
+                        { id: 'women-sunglasses', name: 'Sunglasses', href: '#' },
+                        { id: 'women-hats', name: 'Hats', href: '#' },
+                        { id: 'women-belts', name: 'Belts', href: '#' },
                     ],
                 },
                 {
-                    id: 'brands',
+                    id: 'women-brands',
                     name: 'Brands',
                     items: [
-                        { name: 'Full Nelson', href: '#' },
-                        { name: 'My Way', href: '#' },
-                        { name: 'Re-Arranged', href: '#' },
-                        { name: 'Counterfeit', href: '#' },
-                        { name: 'Significant Other', href: '#' },
+                        { id: 'women-brand-1', name: 'Full Nelson', href: '#' },
+                        { id: 'women-brand-2', name: 'My Way', href: '#' },
+                        { id: 'women-brand-3', name: 'Re-Arranged', href: '#' },
+                        { id: 'women-brand-4', name: 'Counterfeit', href: '#' },
+                        { id: 'women-brand-5', name: 'Significant Other', href: '#' },
                     ],
                 },
             ],
@@ -85,12 +87,14 @@ const navigation = {
             name: 'Men',
             featured: [
                 {
+                    id: 'men-featured-1',
                     name: 'New Arrivals',
                     href: '#',
                     imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-04-detail-product-shot-01.jpg',
                     imageAlt: 'Drawstring top with elastic loop closure and textured interior padding.',
                 },
                 {
+                    id: 'men-featured-2',
                     name: 'Artwork Tees',
                     href: '#',
                     imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-06.jpg',
@@ -100,55 +104,80 @@ const navigation = {
             ],
             sections: [
                 {
-                    id: 'clothing',
+                    id: 'men-clothing',
                     name: 'Clothing',
                     items: [
-                        { name: 'Tops', href: '#' },
-                        { name: 'Pants', href: '#' },
-                        { name: 'Sweaters', href: '#' },
-                        { name: 'T-Shirts', href: '#' },
-                        { name: 'Jackets', href: '#' },
-                        { name: 'Activewear', href: '#' },
-                        { name: 'Browse All', href: '#' },
+                        { id: 'men-tops', name: 'Tops', href: '#' },
+                        { id: 'men-pants', name: 'Pants', href: '#' },
+                        { id: 'men-sweaters', name: 'Sweaters', href: '#' },
+                        { id: 'men-t-shirts', name: 'T-Shirts', href: '#' },
+                        { id: 'men-jackets', name: 'Jackets', href: '#' },
+                        { id: 'men-activewear', name: 'Activewear', href: '#' },
+                        { id: 'men-browse-all', name: 'Browse All', href: '#' },
                     ],
                 },
                 {
-                    id: 'accessories',
+                    id: 'men-accessories',
                     name: 'Accessories',
                     items: [
-                        { name: 'Watches', href: '#' },
-                        { name: 'Wallets', href: '#' },
-                        { name: 'Bags', href: '#' },
-                        { name: 'Sunglasses', href: '#' },
-                        { name: 'Hats', href: '#' },
-                        { name: 'Belts', href: '#' },
+                        { id: 'men-watches', name: 'Watches', href: '#' },
+                        { id: 'men-wallets', name: 'Wallets', href: '#' },
+                        { id: 'men-bags', name: 'Bags', href: '#' },
+                        { id: 'men-sunglasses', name: 'Sunglasses', href: '#' },
+                        { id: 'men-hats', name: 'Hats', href: '#' },
+                        { id: 'men-belts', name: 'Belts', href: '#' },
                     ],
                 },
                 {
-                    id: 'brands',
+                    id: 'men-brands',
                     name: 'Brands',
                     items: [
-                        { name: 'Re-Arranged', href: '#' },
-                        { name: 'Counterfeit', href: '#' },
-                        { name: 'Full Nelson', href: '#' },
-                        { name: 'My Way', href: '#' },
+                        { id: 'men-brand-1', name: 'Re-Arranged', href: '#' },
+                        { id: 'men-brand-2', name: 'Counterfeit', href: '#' },
+                        { id: 'men-brand-3', name: 'Full Nelson', href: '#' },
+                        { id: 'men-brand-4', name: 'My Way', href: '#' },
                     ],
                 },
             ],
         },
     ],
     pages: [
-        { name: 'Company', href: '#' },
-        { name: 'Stores', href: '#' },
+        { id: 'company', name: 'Company', href: '#' },
+        { id: 'stores', name: 'Stores', href: '#' },
     ],
-}
+};
+
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
+
+const sendEventToKafka = async (event: string, data: any) => {
+    try {
+        await fetch('/api/kafka', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ event, data }),
+        });
+    } catch (error) {
+        console.error('Failed to send event to Kafka:', error);
+    }
+};
+
+
+
 export default function Example() {
     const [open, setOpen] = useState(false)
+
+    
+    function navPage(idProduct: string | number) {
+        sendEventToKafka('addToCart', { productId: idProduct });
+
+    }
+
 
     return (
         <div className="bg-white">
@@ -221,7 +250,7 @@ export default function Example() {
                                                                                 >
                                                                                     {section.items.map((item) => (
                                                                                         <li key={item.name} className="flex">
-                                                                                            <Link href="./fake-page">
+                                                                                            <Link href="./fake-page" onClick={() => navPage(item.id)}>
                                                                                             <div className="hover:text-gray-800">
                                                                                                 {item.name}
                                                                                             </div></Link>
@@ -243,6 +272,7 @@ export default function Example() {
                                     {navigation.pages.map((page) => (
                                         <a
                                             key={page.name}
+                                            onClick={() => navPage(page.id)}
                                             href={page.href}
                                             className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
                                         >
