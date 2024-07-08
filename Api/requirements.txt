@@ -1,0 +1,4 @@
+kafka-python-ng
+pyspark == 3.2.4
+pymongo
+pandas
