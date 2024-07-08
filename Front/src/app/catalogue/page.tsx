@@ -278,6 +278,22 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
+
+const sendEventToKafka = async (event: string, data: any) => {
+    try {
+        await fetch('/api/kafka', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ event, data }),
+        });
+    } catch (error) {
+        console.error('Failed to send event to Kafka:', error);
+    }
+};
+
+
 export default function Example() {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const [open, setOpen] = useState(false)
@@ -285,6 +301,7 @@ export default function Example() {
     const router = useRouter();
 
     const openProduct = (idProduct: string | number) => {
+        sendEventToKafka('openCart', { productId: idProduct });
         router.push('/product?productId=' + idProduct);
         
     }

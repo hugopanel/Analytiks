@@ -8,7 +8,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const payloads = [
       {
-        topic: 'your_topic_name', // Replace with your Kafka topic name
+        topic: 'events',
         messages: JSON.stringify({ event, data }),
       },
     ];

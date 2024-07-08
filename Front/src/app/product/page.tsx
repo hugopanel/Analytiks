@@ -336,6 +336,20 @@ interface Product {
     details: string;
 }
 
+const sendEventToKafka = async (event: string, data: any) => {
+    try {
+        await fetch('/api/kafka', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ event, data }),
+        });
+    } catch (error) {
+        console.error('Failed to send event to Kafka:', error);
+    }
+};
+
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -387,6 +401,7 @@ export default function Example() {
             setSuccess('Product added to cart');
             
             localStorage.setItem('cart', JSON.stringify(cart));
+            sendEventToKafka('addToCart', { productId: selectedProduct.id, quantity, price: selectedProduct.price, name: selectedProduct.name });
         }
 
         console.log(localStorage.getItem('cart'));
