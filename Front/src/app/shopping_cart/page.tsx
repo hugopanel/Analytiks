@@ -22,6 +22,23 @@ const defaultCart: ShoppingCart = {
     products: [],
 };
 
+const sendEventToKafka = async (event: string, data: any) => {
+    try {
+        await fetch('/api/kafka', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ event, data }),
+        });
+    } catch (error) {
+        console.error('Failed to send event to Kafka:', error);
+    }
+};
+
+
+
+
 export default function Shopping() {
 
     const [shoppingCart, setShoppingCart] = useState<ShoppingCart>();
@@ -67,7 +84,7 @@ export default function Shopping() {
                 } else {
                     setStringItems(nbItems + ' Items');
                 }
-                
+
                 const total = cart.products.reduce((acc, item) => acc + parseFloat(item.total.replace('$', '')), 0);
                 setStringTotal('$' + total.toFixed(2));
                 setStringTotalWithDelivery('$' + (total + 5).toFixed(2));
@@ -88,15 +105,16 @@ export default function Shopping() {
             const existingItemIndex = products.findIndex(item => item.productId === productId);
             console.log(existingItemIndex);
             const productsEdit = products;
-                        
+
             if (existingItemIndex >= 0) {
                 productsEdit[existingItemIndex].quantity += 1;
                 productsEdit[existingItemIndex].total = '$' + (parseInt(productsEdit[existingItemIndex].price.replace('$', '')) * productsEdit[existingItemIndex].quantity).toString();
             }
 
             setProducts(productsEdit);
-            
+
             localStorage.setItem('cart', JSON.stringify(productsEdit));
+            sendEventToKafka('addProduct', { productId, quantity: productsEdit[existingItemIndex].quantity });
         }
 
         console.log(products);
@@ -109,45 +127,47 @@ export default function Shopping() {
         if (typeof window !== 'undefined') {
             const existingItemIndex = products.findIndex(item => item.productId === productId);
             var productsEdit = products;
-                        
+
             if (existingItemIndex >= 0) {
-                if(productsEdit[existingItemIndex].quantity === 1) {
+                if (productsEdit[existingItemIndex].quantity === 1) {
                     productsEdit = productsEdit.filter(item => item.productId !== productId);
                 } else {
                     productsEdit[existingItemIndex].quantity -= 1;
                     productsEdit[existingItemIndex].total = '$' + (parseInt(productsEdit[existingItemIndex].price.replace('$', '')) * productsEdit[existingItemIndex].quantity).toString();
-                    
+
                 }
             }
-            
+
             setProducts(productsEdit);
             localStorage.setItem('cart', JSON.stringify(productsEdit));
+            sendEventToKafka('removeProduct', { productId, quantity: productsEdit[existingItemIndex]?.quantity || 0 });
             window.location.reload();
         }
     };
 
-    const checkout = (event) => {
+    const checkout = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         if (typeof window !== 'undefined') {
+            sendEventToKafka('checkout', { products });
             localStorage.removeItem('cart');
         }
         router.push('/catalogue');
     }
-        
-    
+
+
     return (
         <section
 
             className=" relative z-10 after:contents-[''] after:absolute after:z-0 after:h-full xl:after:w-1/3 after:top-0 after:right-0 after:bg-gray-50">
             <div className="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto relative z-10">
                 <button className="mt-5" type="button">
-                                <Link href="./catalogue">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="w-5 h-5 text-inherit">
-                                        <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z"></path>
-                                        <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z"></path>
-                                    </svg>
-                                </Link>
-                            </button>
+                    <Link href="./catalogue">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="w-5 h-5 text-inherit">
+                            <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z"></path>
+                            <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z"></path>
+                        </svg>
+                    </Link>
+                </button>
                 <div className="grid grid-cols-12">
                     <div
                         className="col-span-12 xl:col-span-8 lg:pr-8 pt-10 pb-8 lg:py-10 w-full max-xl:max-w-3xl max-xl:mx-auto">
@@ -229,7 +249,7 @@ export default function Shopping() {
                                 </div>
                             ))}
                         </div>
-                        
+
                     </div>
                     <div
                         className=" col-span-12 xl:col-span-4 bg-gray-50 w-full max-xl:px-6 max-w-3xl xl:max-w-lg mx-auto lg:pl-8 py-10">
@@ -250,40 +270,40 @@ export default function Shopping() {
                                         </div>
                                         <input type="text"
                                             className="block w-full h-11 pr-10 pl-36 min-[500px]:pl-52 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-white border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-gray-400"
-                                            placeholder="$5.00"/>
-                                            <button id="dropdown-button" data-target="dropdown-delivery"
-                                                className="dropdown-toggle flex-shrink-0 z-10 inline-flex items-center py-4 px-4 text-base font-medium text-center text-gray-900 bg-transparent  absolute right-0 top-0 pl-2 "
-                                                type="button">
-                                                <svg className="ml-2 my-auto" width="12" height="7" viewBox="0 0 12 7"
-                                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M1 1.5L4.58578 5.08578C5.25245 5.75245 5.58579 6.08579 6 6.08579C6.41421 6.08579 6.74755 5.75245 7.41421 5.08579L11 1.5"
-                                                        stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round"
-                                                        strokeLinejoin="round"></path>
-                                                </svg>
-                                            </button>
-                                            <div id="dropdown-delivery" aria-labelledby="dropdown-delivery"
-                                                className="z-20 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute top-10 bg-white right-0">
-                                                <ul className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                                                    aria-labelledby="dropdown-button">
-                                                    <li>
-                                                        <a href="#"
-                                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Shopping</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#"
-                                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Images</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#"
-                                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">News</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#"
-                                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Finance</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                            placeholder="$5.00" />
+                                        <button id="dropdown-button" data-target="dropdown-delivery"
+                                            className="dropdown-toggle flex-shrink-0 z-10 inline-flex items-center py-4 px-4 text-base font-medium text-center text-gray-900 bg-transparent  absolute right-0 top-0 pl-2 "
+                                            type="button">
+                                            <svg className="ml-2 my-auto" width="12" height="7" viewBox="0 0 12 7"
+                                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M1 1.5L4.58578 5.08578C5.25245 5.75245 5.58579 6.08579 6 6.08579C6.41421 6.08579 6.74755 5.75245 7.41421 5.08579L11 1.5"
+                                                    stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round"
+                                                    strokeLinejoin="round"></path>
+                                            </svg>
+                                        </button>
+                                        <div id="dropdown-delivery" aria-labelledby="dropdown-delivery"
+                                            className="z-20 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute top-10 bg-white right-0">
+                                            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                                aria-labelledby="dropdown-button">
+                                                <li>
+                                                    <a href="#"
+                                                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Shopping</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#"
+                                                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Images</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#"
+                                                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">News</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#"
+                                                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Finance</a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                                 <label className="flex items-center mb-1.5 text-gray-400 text-sm font-medium">Promo Code
@@ -295,39 +315,39 @@ export default function Shopping() {
                                         </div>
                                         <input type="text"
                                             className="block w-full h-11 pr-11 pl-5 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-white border border-gray-300 rounded-lg placeholder-gray-500 focus:outline-gray-400 "
-                                            placeholder="xxxx xxxx xxxx"/>
-                                            <button id="dropdown-button" data-target="dropdown"
-                                                className="dropdown-toggle flex-shrink-0 z-10 inline-flex items-center py-4 px-4 text-base font-medium text-center text-gray-900 bg-transparent  absolute right-0 top-0 pl-2 "
-                                                type="button"><svg className="ml-2 my-auto" width="12" height="7" viewBox="0 0 12 7"
-                                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M1 1.5L4.58578 5.08578C5.25245 5.75245 5.58579 6.08579 6 6.08579C6.41421 6.08579 6.74755 5.75245 7.41421 5.08579L11 1.5"
-                                                        stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round"
-                                                        strokeLinejoin="round"></path>
-                                                </svg>
-                                            </button>
-                                            <div id="dropdown"
-                                                className="absolute top-10 right-0 z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                                                <ul className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                                                    aria-labelledby="dropdown-button">
-                                                    <li>
-                                                        <a href="#"
-                                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Shopping</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#"
-                                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Images</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#"
-                                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">News</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#"
-                                                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Finance</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                            placeholder="xxxx xxxx xxxx" />
+                                        <button id="dropdown-button" data-target="dropdown"
+                                            className="dropdown-toggle flex-shrink-0 z-10 inline-flex items-center py-4 px-4 text-base font-medium text-center text-gray-900 bg-transparent  absolute right-0 top-0 pl-2 "
+                                            type="button"><svg className="ml-2 my-auto" width="12" height="7" viewBox="0 0 12 7"
+                                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M1 1.5L4.58578 5.08578C5.25245 5.75245 5.58579 6.08579 6 6.08579C6.41421 6.08579 6.74755 5.75245 7.41421 5.08579L11 1.5"
+                                                    stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round"
+                                                    strokeLinejoin="round"></path>
+                                            </svg>
+                                        </button>
+                                        <div id="dropdown"
+                                            className="absolute top-10 right-0 z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                                aria-labelledby="dropdown-button">
+                                                <li>
+                                                    <a href="#"
+                                                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Shopping</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#"
+                                                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Images</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#"
+                                                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">News</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#"
+                                                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Finance</a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="flex items-center border-b border-gray-200">

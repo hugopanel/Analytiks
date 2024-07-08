@@ -1,7 +1,7 @@
 "use client"
 
 import { Radio, RadioGroup } from '@headlessui/react'
-import { useEffect, useState } from 'react'
+import { MouseEvent, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import Image from "next/image";
@@ -367,7 +367,7 @@ export default function Example() {
         console.log(selectedProduct.breadcrumbs);
     }, [selectedProduct]); 
     
-    const addToCart = (event) => {
+    const addToCart = (event: MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault(); 
         console.log(localStorage.getItem('cart'));
         var quantity = 1;
