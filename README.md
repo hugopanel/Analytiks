@@ -21,7 +21,7 @@ The different indicators that are computed are the following:
 
 _Note: We chose not to store the last two indicators in the database as a simple query would do the trick. However, the values are still computed by Spark._
 
-# Requisites
+# Prequisites
 
 To run this project, you need to have installed:
 
