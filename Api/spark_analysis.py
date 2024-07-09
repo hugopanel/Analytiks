@@ -22,7 +22,6 @@ spark = SparkSession \
     .getOrCreate()
 
 from pymongo import MongoClient
-import pandas as pd
 
 # Connect to MongoDB
 client = MongoClient('mongodb://root:password@localhost:27017/')
@@ -30,8 +29,8 @@ db = client['analytiks']
 
 # Import the CSV file
 events_df = spark.read.option("delimiter", "|").csv("events.csv", header=True, inferSchema=True)
-events_df.show()
-events_df.printSchema()
+# events_df.show() # Show list of events
+# events_df.printSchema() # Show the schema of the events_df DataFrame
 
 # Clear the collections
 for collection in db.list_collection_names():
@@ -39,6 +38,7 @@ for collection in db.list_collection_names():
 
 
 #### Number of visits on each product page
+print("Number of visits on each product page:")
 visits = events_df.filter((events_df.event == "navPage") | (events_df.event == "openCart"))
 if visits.count() == 0:
     print("No 'navPage' or 'openCart' events found.")
@@ -52,6 +52,7 @@ else:
 
 
 #### Number of "add to cart" for each product
+print("Number of 'add to cart' for each product:")
 add_to_cart = events_df.filter(events_df.event == "addToCart")
 if add_to_cart.count() == 0:
     print("No 'addToCart' events found.")
@@ -71,6 +72,7 @@ else:
 
 
 #### Number of purchases for each product 
+print("Number of purchases for each product:")
 # Define schema for checkout event data
 checkout_schema = StructType([
         StructField("products", ArrayType(StructType([
@@ -96,12 +98,14 @@ else:
 
 
 ### Average quantity for each product on all orders
+    print("Average quantity for each product on all orders:")
     average_quantity = parsed_add_to_cart.groupBy("productId").avg("quantity")
     average_quantity.show()
     db['average_quantity'].insert_many(average_quantity.toPandas().to_dict(orient='records'))
 
 
 ### Average amount spent on each order
+print("Average amount spent on each order:")
 mydata = events_df.filter(events_df.event == "checkout") # Filter only checkout events
 if mydata.count() == 0:
     print("No 'checkout' events found.")
@@ -112,13 +116,13 @@ else:
     mydata = mydata.selectExpr('event', 'checkoutId', 'products.total as productTotal') # Select the productId and quantity
     mydata = mydata.withColumn("productTotal", mydata["productTotal"].substr(2, 100).cast(IntegerType())) # Remove the dollar sign before the total and cast to integer in the productTotal column
     grouped_purchases = mydata.groupBy("checkoutId").sum("productTotal") # Group by productId, sum the quantities
-    # Calculate the average of the productTotal column 
-    grouped_purchases = grouped_purchases.selectExpr('avg(`sum(productTotal)`) as avgTotal')
+    grouped_purchases = grouped_purchases.selectExpr('avg(`sum(productTotal)`) as avgTotal') # Calculate the average of the productTotal column 
     grouped_purchases.show()
     db['checkout_average_total'].insert_many(grouped_purchases.toPandas().to_dict(orient='records'))
 
 
 ### Max amount for an order
+    print("Max amount for an order:")
     max_amount = mydata.groupBy("checkoutId").sum("productTotal") # Group by productId, sum the quantities
     max_amount = max_amount.selectExpr('max(`sum(productTotal)`) as maxTotal')
     max_amount.show()
@@ -126,6 +130,7 @@ else:
 
 
 ### Min amount for an order
+    print("Min amount for an order:")
     min_amount = mydata.groupBy("checkoutId").sum("productTotal") # Group by productId, sum the quantities
     min_amount = min_amount.selectExpr('min(`sum(productTotal)`) as minTotal')
     min_amount.show()
@@ -133,6 +138,7 @@ else:
 
 
 ### Number of product removals (remove from cart = "removeProduct" event)
+print("Number of product removals:")
 remove_product = events_df.filter(events_df.event == "removeProduct")
 if remove_product.count() == 0:
     print("No 'removeProduct' events found.")
@@ -147,11 +153,13 @@ else:
 
 ### More statistics to show, but no need to store them in MongoDB since a simple query can be used to get the result
 ### Most removed product
-# most_removed_product = parsed_remove_product.groupBy("parsed_data.productId").count()
-# most_removed_product = most_removed_product.orderBy(col("count").desc()).limit(1)
-# most_removed_product.show()
+print("Most removed product:")
+most_removed_product = parsed_remove_product.groupBy("parsed_data.productId").count()
+most_removed_product = most_removed_product.orderBy(col("count").desc()).limit(1)
+most_removed_product.show()
 
 ### Most bought product (not just added but checked out, based on quantity)
-# most_bought_product = parsed_add_to_cart.groupBy("parsed_data.productId").sum("parsed_data.quantity")
-# most_bought_product = most_bought_product.orderBy(col("sum(quantity)").desc()).limit(1)
-# most_bought_product.show()
+print("Most bought product:")
+most_bought_product = parsed_add_to_cart.groupBy("productId").sum("quantity")
+most_bought_product = most_bought_product.orderBy(col("sum(quantity)").desc()).limit(1)
+most_bought_product.show()
