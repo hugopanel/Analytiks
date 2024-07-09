@@ -1,3 +1,4 @@
+import json
 from kafka import KafkaConsumer, TopicPartition
 
 consumer = KafkaConsumer(bootstrap_servers='localhost:9092', enable_auto_commit=False, api_version="3.7.1")
@@ -26,9 +27,8 @@ try:
         
         for tp, messages in message_pack.items():
             for message in messages:
-                events.append(message)
-                print(f"Received message: {message.key.decode()}:{message.value.decode()}")
-
+                message_json = json.loads(message.value.decode())
+                events.append(message_json)
 except KeyboardInterrupt:
     pass
 finally:
@@ -43,9 +43,9 @@ import csv
 
 # Create a CSV file with the events
 with open('events.csv', mode='w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(['key', 'value'])
+    writer = csv.writer(file, delimiter="|")
+    writer.writerow(['event', 'data'])
     for event in events:
-        writer.writerow([event.key.decode(), event.value.decode()])
+        writer.writerow([event['event'], event['data']])
     
 print("CSV file generated!")
