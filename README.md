@@ -77,7 +77,7 @@ pip install -r requirements.txt
 Create the CSV file:
 
 ```
-python generate_report.csv
+python generate_report.py
 ```
 
 Use Spark to read the CSV, compute the indicators and store them in the database:
