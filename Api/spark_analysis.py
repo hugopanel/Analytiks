@@ -154,12 +154,18 @@ else:
 ### More statistics to show, but no need to store them in MongoDB since a simple query can be used to get the result
 ### Most removed product
 print("Most removed product:")
-most_removed_product = parsed_remove_product.groupBy("parsed_data.productId").count()
-most_removed_product = most_removed_product.orderBy(col("count").desc()).limit(1)
-most_removed_product.show()
+if remove_product.count() == 0:
+    print("No 'removeProduct' events found.")
+else:
+    most_removed_product = parsed_remove_product.groupBy("parsed_data.productId").count()
+    most_removed_product = most_removed_product.orderBy(col("count").desc()).limit(1)
+    most_removed_product.show()
 
 ### Most bought product (not just added but checked out, based on quantity)
 print("Most bought product:")
-most_bought_product = parsed_add_to_cart.groupBy("productId").sum("quantity")
-most_bought_product = most_bought_product.orderBy(col("sum(quantity)").desc()).limit(1)
-most_bought_product.show()
+if parsed_add_to_cart.count() == 0:
+    print("No 'checkout' events found.")
+else:
+    most_bought_product = parsed_add_to_cart.groupBy("productId").sum("quantity")
+    most_bought_product = most_bought_product.orderBy(col("sum(quantity)").desc()).limit(1)
+    most_bought_product.show()
