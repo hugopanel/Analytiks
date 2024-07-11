@@ -112,9 +112,9 @@ export default function Shopping() {
             }
 
             setProducts(productsEdit);
-
-            localStorage.setItem('cart', JSON.stringify(productsEdit));
             sendEventToKafka('addProduct', { productId, quantity: productsEdit[existingItemIndex].quantity });
+            localStorage.setItem('cart', JSON.stringify(productsEdit));
+            
         }
 
         console.log(products);
