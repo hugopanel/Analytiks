@@ -306,13 +306,13 @@ export default function Example() {
     const router = useRouter();
 
     const openProduct = (idProduct: string | number) => {
-        sendEventToKafka('openCart', { productId: idProduct });
+        sendEventToKafka('openProduct', { productId: idProduct });
         router.push('/product?productId=' + idProduct);
         
     }
 
     function navPage(idProduct: string | number) {
-        sendEventToKafka('navPage', { productId: idProduct });
+        sendEventToKafka('navPage', { pageId: idProduct });
     }
 
     // useEffect(() => {
@@ -436,7 +436,7 @@ export default function Example() {
 
                                 {/* Cart */}
                                 <div className="ml-4 flow-root lg:ml-6">
-                                    <a href="#" className="group -m-2 flex items-center p-2">
+                                    <div href="#" className="group -m-2 flex items-center p-2">
                                         <button className="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-gray-900 hover:bg-blue-500/10 active:bg-blue-700/30 flex items-center gap-4 px-4 capitalize" type="button">
                                             <Link href="./shopping_cart">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -446,7 +446,7 @@ export default function Example() {
                                         </button>
                                         <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
                                         <span className="sr-only">items in cart, view bag</span>
-                                    </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

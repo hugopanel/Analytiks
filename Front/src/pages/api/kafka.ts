@@ -1,4 +1,4 @@
-// src/pages/api/kafka.ts
+
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { producer } from '../../lib/kafka';
 

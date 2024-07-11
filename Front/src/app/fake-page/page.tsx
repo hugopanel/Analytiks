@@ -174,7 +174,7 @@ export default function Example() {
 
     
     function navPage(idProduct: string | number) {
-        sendEventToKafka('navPage', { productId: idProduct });
+        sendEventToKafka('navPage', { pageId: idProduct });
 
     }
 
