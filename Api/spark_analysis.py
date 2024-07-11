@@ -47,6 +47,8 @@ else:
     parsed_visits = visits.withColumn("parsed_data", from_json(col("data"), StructType([StructField("productId", StringType())])))
     # Group by productId and count the visits
     grouped_visits = parsed_visits.groupBy("parsed_data.productId").count()
+    grouped_visits = grouped_visits.withColumnRenamed("productId", "page")
+    grouped_visits = grouped_visits.withColumnRenamed("count", "visits")
     grouped_visits.show()
     db['page_visits'].insert_many(grouped_visits.toPandas().to_dict(orient='records'))
 
