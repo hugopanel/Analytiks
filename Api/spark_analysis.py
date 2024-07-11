@@ -39,9 +39,9 @@ for collection in db.list_collection_names():
 
 #### Number of visits on each product page
 print("Number of visits on each product page:")
-visits = events_df.filter((events_df.event == "navPage") | (events_df.event == "openCart"))
+visits = events_df.filter((events_df.event == "navPage") | (events_df.event == "openProduct"))
 if visits.count() == 0:
-    print("No 'navPage' or 'openCart' events found.")
+    print("No 'navPage' or 'openProduct' events found.")
 else:
     # Parse the JSON string in the data column
     parsed_visits = visits.withColumn("parsed_data", from_json(col("data"), StructType([StructField("productId", StringType())])))
