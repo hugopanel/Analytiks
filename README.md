@@ -1,5 +1,9 @@
 # Analytiks
 
+<img width="1667" alt="image" src="https://github.com/user-attachments/assets/00567398-002b-4099-82f8-4c4b011fcb4a">
+
+_This is a fork from the original repo to add context and fix typos. The original repository can be found [here](https://github.com/ArthB94/KafKa_Project)._
+
 # Goal and objectives
 
 Analytiks is a fake eCommerce website where clicks and page visits by users are tracked.
@@ -21,7 +25,7 @@ The different indicators that are computed are the following:
 
 _Note: We chose not to store the last two indicators in the database as a simple query would do the trick. However, the values are still computed by Spark._
 
-# Prequisites
+# Prerequisites
 
 To run this project, you need to have installed:
 
@@ -30,6 +34,8 @@ To run this project, you need to have installed:
 - Python 3.12+ (not tested on versions below 3.12) with the `pip` command
 
 # How to run
+
+Begin by cloning the repository locally using `git clone`.
 
 ## Start the backend
 
